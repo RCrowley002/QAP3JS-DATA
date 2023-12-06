@@ -1,11 +1,26 @@
 const express = require("express");
 const router = express.Router();
 const dal = require("../dal/cars");
+
 // route to get all cars
 router.get("/", async (req, res) => {
   try {
     const cars = await dal.getCars();
     res.render("carsIndex", { cars });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Internal Server Error");
+  }
+});
+
+// Route to update the mileage of a car
+
+router.post("/:car_id/update", async (req, res) => {
+  const carID = req.params.car_id;
+  const newMileage = req.body.newMileage;
+  try {
+    await dal.updateMileage(carID, newMileage);
+    res.redirect(`/${carID}`);
   } catch (error) {
     console.error(error);
     res.status(500).send("Internal Server Error");
@@ -30,13 +45,41 @@ router.get("/add", (req, res) => {
 
 // adding the new car to the database
 router.post("/add", async (req, res) => {
-  const { make, model, year, vin, country, mileage } = req.body;
   try {
-    await dal.addCar({ make, model, year, vin, country, mileage });
+    const car = req.body;
+    await dal.addCar(car);
     res.redirect("/");
   } catch (error) {
     console.error(error);
+    res.status(500).send("Failed to Add Car");
+  }
+});
+
+// Route to fetch a specific car by ID using link parameters
+router.get("/:car_id", async (req, res) => {
+  const carID = req.params.car_id;
+  try {
+    const car = await dal.getCarByID(carID);
+    res.render("carDetails", { car });
+  } catch (error) {
+    console.error(error);
     res.status(500).send("Internal Server Error");
+  }
+});
+
+// Route to delete a car from the database
+router.get("/delete", (req, res) => {
+  res.render("delCar");
+});
+
+router.post("/delete", async (req, res) => {
+  try {
+    const carID = req.body.carID;
+    await dal.deleteCar(carID);
+    res.redirect("/");
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Failed to Delete Car");
   }
 });
 

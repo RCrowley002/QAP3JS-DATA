@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Remove Car</title>
+  </head>
+  <body>
+    <h1>Remove Car</h1>
+    <form action="/delete?_method=DELETE" method="POST">
+      <label for="carID">Car ID:</label>
+      <input type="number" name="carID" required />
+      <button type="submit">Delete Car</button>
+    </form>
+  </body>
+</html>
