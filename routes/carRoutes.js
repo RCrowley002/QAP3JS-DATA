@@ -67,14 +67,9 @@ router.get("/:car_id", async (req, res) => {
   }
 });
 
-// Route to delete a car from the database
-router.get("/delete", (req, res) => {
-  res.render("delCar");
-});
-
 router.post("/delete", async (req, res) => {
+  const carID = req.body.carID;
   try {
-    const carID = req.body.carID;
     await dal.deleteCar(carID);
     res.redirect("/");
   } catch (error) {
